@@ -6,11 +6,9 @@ import com.career.user_service.dto.UserDTO;
 import com.career.user_service.entity.User;
 import com.career.user_service.exception.UserNotFoundException;
 import com.career.user_service.repository.UserRepository;
-import com.career.user_service.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -61,7 +59,7 @@ public class UserService {
         );
     }
 
-    public LoginResponse loginUser(LoginRequest request) {
+    public User loginUser(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(
@@ -69,13 +67,9 @@ public class UserService {
                 ));
 
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-
-            // 🔐 Generate token
-            String token = JwtUtil.generateToken(user.getEmail());
-
-            return new LoginResponse("Login successful", true, token);
+            return user;
         } else {
-            return new LoginResponse("Invalid password", false, null);
+            throw new UserNotFoundException("Invalid password");
         }
     }
 }

@@ -19,8 +19,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
     private JwtUtil jwtUtil;
-    private User user2;
 
     // ✅ Register User
     @PostMapping("/register")
@@ -45,21 +45,19 @@ public class UserController {
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest request) {
 
         // Step 1: Authenticate user
-        LoginResponse user = userService.loginUser(request);
+        User user = userService.loginUser(request); // ✅ return User entity
 
         // Step 2: Generate JWT token
-        String token = jwtUtil.generateToken(user2.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail());
 
         // Step 3: Create response
         LoginResponse response = new LoginResponse(
                 token,
-                user2.getId(),
-                user2.getEmail(),
-                user2.getName()
+                user.getId(),
+                user.getEmail(),
+                user.getName()
         );
 
-        // Step 4: Return response
         return ResponseEntity.ok(response);
     }
-
 }
