@@ -10,6 +10,9 @@ public class LoginResponse {
         this.success = success;
     }
 
+    public LoginResponse(String token, Long id, String email, String name) {
+    }
+
     public String getMessage() {
         return message;
     }
@@ -17,4 +20,6 @@ public class LoginResponse {
     public boolean isSuccess() {
         return success;
     }
+
+
 }
